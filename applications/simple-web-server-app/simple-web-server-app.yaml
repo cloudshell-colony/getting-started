@@ -1,0 +1,49 @@
+kind: application
+spec_version: 1
+
+inputs:
+  - username
+
+configuration:
+  healthcheck:
+    script: simple-web-server-hc.sh
+    timeout: 1000
+  initialization:
+    script: simple-web-server-cm.sh
+  start:
+    script: simple-web-server-cm-command.sh
+
+source:
+  image:
+    docker_image:
+    - name: node
+      tag: 6
+    ami:
+    - id: ami-f90a4880
+      region: eu-west-1
+      username: ubuntu
+    - id: ami-f4f21593
+      region: eu-west-2
+      username: ubuntu
+    - id: ami-925144f2
+      region: us-west-1
+      username: ubuntu
+    azure_image:
+    - urn: Canonical:UbuntuServer:16.04-LTS:latest
+  os_type: linux
+
+infrastructure:
+  compute:
+    spec:
+      aws:
+        instance_type: t3.medium
+      azure:
+        vm_size: Standard_B1s
+  connectivity:
+    external:
+    - port_info:
+        port: 3000
+        path: ''
+
+debugging:
+  connection_protocol: SSH
